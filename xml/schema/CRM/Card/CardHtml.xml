@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<table>
+  <base>CRM/Card</base>
+  <class>CardHtml</class>
+  <name>civicrm_card_html</name>
+  <comment>Card Html Design</comment>
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique Card Html ID</comment>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+  <field>
+    <name>title</name>
+    <type>varchar</type>
+    <length>255</length>
+    <comment>Cart Title</comment>
+  </field>
+  <field>
+    <name>front_html</name>
+    <type>longtext</type>
+    <comment>Front html of card</comment>
+    <html>
+      <label>Front HTML</label>
+    </html>
+  </field>
+  <field>
+    <name>front_css</name>
+    <type>longtext</type>
+    <comment>Front html css.</comment>
+    <html>
+      <label>Front HTML CSS</label>
+    </html>
+  </field>
+  <field>
+    <name>back_html</name>
+    <type>longtext</type>
+    <comment>Back Side html of card.</comment>
+    <html>
+      <label>Back Side HTML</label>
+    </html>
+  </field>
+  <field>
+    <name>back_css</name>
+    <type>longtext</type>
+    <comment>Back side html css.</comment>
+    <html>
+      <label>Back Side html CSS</label>
+    </html>
+  </field>
+  <field>
+    <name>is_active</name>
+    <title>Is Active</title>
+    <type>boolean</type>
+    <default>1</default>
+    <uniqueName>cardhtml_is_active</uniqueName>
+    <html>
+      <type>CheckBox</type>
+    </html>
+    <comment>Is this Card Html Active.</comment>
+    <add>5.39</add>
+  </field>
+</table>

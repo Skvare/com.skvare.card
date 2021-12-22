@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Card</base>
+  <class>Card</class>
+  <name>civicrm_card_mapping</name>
+  <comment>FIXME</comment>
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique Card ID</comment>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+  <field>
+    <name>template_id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Template ID</comment>
+  </field>
+  <foreignKey>
+    <name>template_id</name>
+    <table>civicrm_card_html</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+  <field>
+    <name>entity_type</name>
+    <type>varchar</type>
+    <length>255</length>
+    <comment>Entity Type</comment>
+  </field>
+  <field>
+    <name>entity_mapping</name>
+    <type>varchar</type>
+    <length>255</length>
+    <comment>Entity Type</comment>
+  </field>
+</table>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/admin/card/upload</path>
+    <page_callback>CRM_Card_Form_Upload</page_callback>
+    <title>Create New</title>
+    <access_arguments>administer CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/admin/card/list</path>
+    <page_callback>CRM_Card_Page_List</page_callback>
+    <title>List Card</title>
+    <access_arguments>administer CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/admin/card/mapping</path>
+    <page_callback>CRM_Card_Form_Mapping</page_callback>
+    <title>Map Card to Entity</title>
+    <access_arguments>administer CiviCRM</access_arguments>
+  </item>
+</menu>

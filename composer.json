@@ -1,0 +1,7 @@
+{
+    "require": {
+        "mpdf/mpdf": "^8.0",
+        "phenx/php-font-lib": "^0.5.2",
+        "phenx/php-svg-lib": "^0.3.3"
+    }
+}
