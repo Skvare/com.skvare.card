@@ -18,4 +18,16 @@
     <title>Map Card to Entity</title>
     <access_arguments>administer CiviCRM</access_arguments>
   </item>
+  <item>
+    <path>civicrm/admin/setting/card</path>
+    <page_callback>CRM_Card_Form_Setting</page_callback>
+    <title>Cards Setting</title>
+    <access_arguments>administer CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/admin/contribute/card</path>
+    <page_callback>CRM_Card_Form_ContributionPage_Setting</page_callback>
+    <title>Settingpage</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
 </menu>
