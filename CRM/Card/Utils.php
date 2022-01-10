@@ -16,7 +16,6 @@ class CRM_Card_Utils {
    * @throws \Mpdf\MpdfException
    */
   public static function preview($params, $contactId = NULL, $attachment = FALSE) {
-    $contactId = 202;
     $frontPage = stripslashes($params['front_html']);
     if ($contactId) {
       $frontPage = [$frontPage];
@@ -158,6 +157,7 @@ class CRM_Card_Utils {
         'mime_type' => 'application/pdf',
         'cleanName' => $base,
       ];
+      $params['card_processed_' . $contactID] = TRUE;
     }
   }
 

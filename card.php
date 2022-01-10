@@ -190,7 +190,7 @@ function card_civicrm_navigationMenu(&$menu) {
 /*
  * Implementation of hook_civicrm_alterMailParams
  */
-function card_tickets_civicrm_alterMailParams(&$params) {
+function card_civicrm_alterMailParams(&$params) {
   if (!empty($params['groupName']) && $params['groupName'] == 'Scheduled Reminder Sender'
     && $params['entity'] == 'action_schedule' && !empty($params['entity_id'])) {
     $domainID = CRM_Core_Config::domainID();
@@ -209,8 +209,12 @@ function card_tickets_civicrm_alterMailParams(&$params) {
       $settings = Civi::settings($domainID);
       if ($settings->get('online_membership_is_membership_card_enabled_' . $params['tplParams']['contributionPageId'])) {
         $cardID = $settings->get('online_membership_card_id_' . $params['tplParams']['contributionPageId']);
-        if ($cardID && $params['contactID']) {
-          CRM_Card_Utils::attachPdf($params, $cardID, $params['contactID']);
+        // IF card already attached then return from here.
+        if (!empty($params['card_processed_' . $params['contactId']])) {
+          return;
+        }
+        if ($cardID && $params['contactId']) {
+          CRM_Card_Utils::attachPdf($params, $cardID, $params['contactId']);
         }
       }
     }
