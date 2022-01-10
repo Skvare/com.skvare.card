@@ -160,30 +160,30 @@ function card_civicrm_themes(&$themes) {
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_navigationMenu
  */
 function card_civicrm_navigationMenu(&$menu) {
-  _card_civix_insert_navigation_menu($menu, 'Administer/System Settings', array(
+  _card_civix_insert_navigation_menu($menu, 'Administer/System Settings', [
     'label' => E::ts('Cards Setting'),
     'name' => 'card_lists',
-    'url' => CRM_Utils_System::url('admin/setting/card', 'reset=1', TRUE),
+    'url' => CRM_Utils_System::url('civicrm/admin/setting/card', 'reset=1', TRUE),
     'permission' => 'administer CiviCRM',
     'operator' => 'OR',
     'separator' => 0,
-  ));
-  _card_civix_insert_navigation_menu($menu, 'Administer/System Settings', array(
+  ]);
+  _card_civix_insert_navigation_menu($menu, 'Administer/System Settings', [
     'label' => E::ts('List Cards'),
     'name' => 'card_lists',
     'url' => CRM_Utils_System::url('civicrm/admin/card/list', 'reset=1', TRUE),
     'permission' => 'administer CiviCRM',
     'operator' => 'OR',
     'separator' => 0,
-  ));
-  _card_civix_insert_navigation_menu($menu, 'Administer/System Settings', array(
+  ]);
+  _card_civix_insert_navigation_menu($menu, 'Administer/System Settings', [
     'label' => E::ts('List Mapping'),
     'name' => 'card_lists_mapping',
     'url' => CRM_Utils_System::url('civicrm/admin/card/mapping', 'reset=1', TRUE),
     'permission' => 'administer CiviCRM',
     'operator' => 'OR',
     'separator' => 0,
-  ));
+  ]);
   _card_civix_navigationMenu($menu);
 }
 
@@ -203,7 +203,7 @@ function card_tickets_civicrm_alterMailParams(&$params) {
       }
     }
   }
-  elseif (($params['groupName'] == 'msg_tpl_workflow_membership' &&  $params['valueName'] == 'membership_online_receipt')) {
+  elseif (($params['groupName'] == 'msg_tpl_workflow_membership' && $params['valueName'] == 'membership_online_receipt')) {
     if (!empty($params['tplParams']['contributionPageId'])) {
       $domainID = CRM_Core_Config::domainID();
       $settings = Civi::settings($domainID);
@@ -225,8 +225,8 @@ function members_civicrm_alterMailParams(&$params, $context) {
 
 function card_civicrm_buildForm($fname, &$form) {
   if (in_array($fname, ['CRM_Admin_Form_ScheduleReminders'])) {
-    $form->add('checkbox', 'is_membership_card_enabled', ts('Should Membership Card attached to email?'));
-    $attribute = ['class' => 'crm-select2', 'placeholder' => ts('- any -')];
+    $form->add('checkbox', 'is_membership_card_enabled', E::ts('Should Membership Card attached to email?'));
+    $attribute = ['class' => 'crm-select2', 'placeholder' => E::ts('- any -')];
     $cardList = CRM_Card_Utils::getCardList();
     $form->add('select', 'card_id', 'Card List', $cardList, FALSE, $attribute);
     if ($form->_action & CRM_Core_Action::UPDATE && !empty($form->_id)) {
@@ -271,7 +271,7 @@ function card_civicrm_tabset($tabsetName, &$tabs, $context) {
       "reset=1&action=update&id=" . $contribution_page_id);
 
     $tabs['card'] = [
-      'title' => ts('Card', ['domain' => 'com.skvare.card']),
+      'title' => E::ts('Card', ['domain' => 'com.skvare.card']),
       'url' => $url,
       'active' => TRUE,
       'class' => 'ajaxForm',

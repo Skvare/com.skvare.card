@@ -11,12 +11,12 @@ class CRM_Card_Form_Setting extends CRM_Core_Form {
   public function buildQuickForm() {
 
     // add form elements
-    $attribute = ['class' => 'crm-select2', 'placeholder' => ts('- any -')];
+    $attribute = ['class' => 'crm-select2', 'placeholder' => E::ts('- any -')];
     $membershipTypes = CRM_Card_Utils::membershipTypeCurrentDomain();
     $this->add('select', 'card_membership_types', 'Membership Type(s)',
       $membershipTypes, FALSE, $attribute + ['multiple' => 'multiple']);
-    $this->add('advcheckbox', 'card_per_membership_type', ts('Separate Card per Membership Type'));
-    $this->add('advcheckbox', 'card_in_scheduled_reminder', ts('Use In Scheduled Reminder?'));
+    $this->add('advcheckbox', 'card_per_membership_type', E::ts('Separate Card per Membership Type'));
+    $this->add('advcheckbox', 'card_in_scheduled_reminder', E::ts('Use In Scheduled Reminder?'));
 
     $this->addButtons([
       [

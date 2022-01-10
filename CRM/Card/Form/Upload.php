@@ -46,13 +46,13 @@ class CRM_Card_Form_Upload extends CRM_Core_Form {
 
     // add form elements
     $attribute = ['rows' => 10, 'cols' => 80, 'class' => 'collapsed'];
-    $this->addElement('text', 'title', ts('Cart Title'),
+    $this->addElement('text', 'title', E::ts('Cart Title'),
       CRM_Core_DAO::getAttribute('CRM_Card_DAO_CardHtml', 'title'));
-    $this->add('textarea', 'front_html', ts('Front HTML'), $attribute);
-    $this->add('textarea', 'front_css', ts('Front HTML CSS'), $attribute);
-    $this->add('textarea', 'back_html', ts('Back HTML'), $attribute);
-    $this->add('textarea', 'back_css', ts('Back HTML CSS'), $attribute);
-    $this->addElement('checkbox', 'is_active', ts('Active?'));
+    $this->add('textarea', 'front_html', E::ts('Front HTML'), $attribute);
+    $this->add('textarea', 'front_css', E::ts('Front HTML CSS'), $attribute);
+    $this->add('textarea', 'back_html', E::ts('Back HTML'), $attribute);
+    $this->add('textarea', 'back_css', E::ts('Back HTML CSS'), $attribute);
+    $this->addElement('checkbox', 'is_active', E::ts('Active?'));
     $this->addButtons(array(
       array(
         'type' => 'submit',
@@ -76,7 +76,7 @@ class CRM_Card_Form_Upload extends CRM_Core_Form {
     if (empty($this->_id)) {
       $this->_id = $cardHtml->id;
     }
-    CRM_Core_Session::setStatus(ts("Card Html has been saved."), ts('Saved'),
+    CRM_Core_Session::setStatus(E::ts("Card Html has been saved."), E::ts('Saved'),
       'success');
     parent::postProcess();
     $this->postProcessHook();

@@ -10,8 +10,8 @@ use CRM_Card_ExtensionUtil as E;
 class CRM_Card_Form_ContributionPage_Setting extends CRM_Contribute_Form_ContributionPage {
 
   public function buildQuickForm() {
-    $this->add('checkbox', 'is_membership_card_enabled', ts('Should Membership Card attached to email?'));
-    $attribute = ['class' => 'crm-select2', 'placeholder' => ts('- any -')];
+    $this->add('checkbox', 'is_membership_card_enabled', E::ts('Should Membership Card attached to email?'));
+    $attribute = ['class' => 'crm-select2', 'placeholder' => E::ts('- any -')];
     $cardList = CRM_Card_Utils::getCardList();
     $this->add('select', 'card_id', 'Card List', $cardList, FALSE, $attribute);
     if ($this->_action & CRM_Core_Action::UPDATE && !empty($this->_id)) {
