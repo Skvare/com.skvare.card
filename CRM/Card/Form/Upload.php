@@ -46,8 +46,7 @@ class CRM_Card_Form_Upload extends CRM_Core_Form {
 
     // add form elements
     $attribute = ['rows' => 10, 'cols' => 80, 'class' => 'collapsed'];
-    $this->addElement('text', 'title', E::ts('Cart Title'),
-      CRM_Core_DAO::getAttribute('CRM_Card_DAO_CardHtml', 'title'));
+    $this->add('text', 'title', E::ts('Cart Title'), ['size' => 60], TRUE);
     $this->add('textarea', 'front_html', E::ts('Front HTML'), $attribute);
     $this->add('textarea', 'front_css', E::ts('Front HTML CSS'), $attribute);
     $this->add('textarea', 'back_html', E::ts('Back HTML'), $attribute);

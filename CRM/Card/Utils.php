@@ -3,6 +3,7 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 //require_once __DIR__ . '/../../packages/mpdf-6.1.4/mpdf.php';
 use CRM_Card_ExtensionUtil as E;
 use Mpdf\Output\Destination;
+use Civi\Token\TokenProcessor;
 
 
 class CRM_Card_Utils {
@@ -19,7 +20,7 @@ class CRM_Card_Utils {
     $frontPage = stripslashes($params['front_html']);
     if ($contactId) {
       $frontPage = [$frontPage];
-      $frontPage = CRM_Core_TokenSmarty::render($frontPage,
+      $frontPage = self::render($frontPage,
         [
           'contactId' => $contactId,
         ]
@@ -32,7 +33,7 @@ class CRM_Card_Utils {
     $backPage = stripslashes($params['back_html']);
     if ($contactId) {
       $backPage = [$backPage];
-      $backPage = CRM_Core_TokenSmarty::render($backPage,
+      $backPage = self::render($backPage,
         [
           'contactId' => $contactId,
         ]
@@ -158,5 +159,62 @@ class CRM_Card_Utils {
         'cleanName' => $base,
       ];
     }
+  }
+
+  /**
+   * Render some template(s), evaluating token expressions and Smarty expressions.
+   *
+   * This helper simplifies usage of hybrid notation. As a simplification, it may not be optimal for processing
+   * large batches (e.g. CiviMail or scheduled-reminders), but it's a little more convenient for 1-by-1 use-cases.
+   *
+   * @param array $messages
+   *   Message templates. Any mix of the following templates ('text', 'html', 'subject', 'msg_text', 'msg_html', 'msg_subject').
+   *   Ex: ['subject' => 'Hello {contact.display_name}', 'text' => 'What up?'].
+   *   Note: The content-type may be inferred by default. A key like 'html' or 'msg_html' indicates HTML formatting; any other key indicates text formatting.
+   * @param array $tokenContext
+   *   Ex: ['contactId' => 123, 'activityId' => 456]
+   * @param array|null $smartyAssigns
+   *   List of data to export via Smarty.
+   *   Data is only exported temporarily (long enough to execute this render() method).
+   * @return array
+   *   Rendered messages. These match the various inputted $messages.
+   *   Ex: ['msg_subject' => 'Hello Bob Roberts', 'msg_text' => 'What up?']
+   * @internal
+   */
+  public static function render(array $messages, array $tokenContext = [], array $smartyAssigns = []): array {
+    $result = [];
+    $tokenContextDefaults = [
+      'controller' => __CLASS__,
+      'smarty' => TRUE,
+    ];
+    $tokenProcessor = new TokenProcessor(\Civi::dispatcher(), array_merge($tokenContextDefaults, $tokenContext));
+    $tokenProcessor->addRow([]);
+    $useSmarty = !empty($tokenProcessor->context['smarty']);
+
+    // Load templates
+    foreach ($messages as $messageId => $messageTpl) {
+      $format = preg_match('/html/', $messageId) ? 'text/html' : 'text/plain';
+      $tokenProcessor->addMessage($messageId, $messageTpl, $format);
+    }
+
+    // Evaluate/render templates
+    try {
+      if ($useSmarty) {
+        CRM_Core_Smarty::singleton()->pushScope($smartyAssigns);
+      }
+      $tokenProcessor->evaluate();
+      foreach ($messages as $messageId => $ign) {
+        foreach ($tokenProcessor->getRows() as $row) {
+          $result[$messageId] = $row->render($messageId);
+        }
+      }
+    }
+    finally {
+      if ($useSmarty) {
+        CRM_Core_Smarty::singleton()->popScope();
+      }
+    }
+
+    return $result;
   }
 }

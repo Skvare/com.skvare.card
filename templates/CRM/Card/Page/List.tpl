@@ -1,3 +1,11 @@
+<div>
+  <a  class="button no-popup nowrap"
+      href="{crmURL p='civicrm/admin/card/upload'
+      q="reset=1&action=add"}">
+    <i class="crm-i fa-add"></i><span> {ts}Add New Card{/ts}</span>
+  </a>
+  <br/><br/>
+</div>
 <div class="crm-block crm-content-block crm-voucher-view-form-block">
   <table class="selector row-highlight">
     <tr>

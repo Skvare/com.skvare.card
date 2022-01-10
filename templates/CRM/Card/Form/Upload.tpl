@@ -10,11 +10,7 @@
 </div>
 
 <div id="help">
-  <p>Card Html Form.</p>
-</div>
-
-<div class="crm-submit-buttons">
-{include file="CRM/common/formButtons.tpl" location="top"}
+  <p>{ts}Card Html Form.{/ts}</p>
 </div>
 
 {foreach from=$elementNames item=elementName}
