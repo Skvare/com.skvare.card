@@ -13,17 +13,16 @@ class CRM_Card_Utils {
    *
    * @param $params
    * @param $contactId
+   * @param $attachment
+   * @param $membership_id
    * @throws \Mpdf\MpdfException
    */
-  public static function preview($params, $contactId = NULL, $attachment = FALSE) {
+  public static function preview($params, $contactId = NULL, $attachment =
+  FALSE, $membership_id = NULL) {
+    //$contactId = 2;
     $frontPage = stripslashes($params['front_html']);
     if ($contactId) {
-      $frontPage = [$frontPage];
-      $frontPage = self::render($frontPage,
-        [
-          'contactId' => $contactId,
-        ]
-      );
+      $frontPage = self::render2($frontPage, $contactId, $membership_id);
       $frontPage = $frontPage[0];
     }
     //$frontPageCSS = stripslashes($params['front_css']);
@@ -31,12 +30,7 @@ class CRM_Card_Utils {
     //echo $params['back_html']; exit;
     $backPage = stripslashes($params['back_html']);
     if ($contactId) {
-      $backPage = [$backPage];
-      $backPage = self::render($backPage,
-        [
-          'contactId' => $contactId,
-        ]
-      );
+      $backPage = self::render2($backPage, $contactId, $membership_id);
       $backPage = $backPage[0];
     }
 
@@ -138,27 +132,88 @@ class CRM_Card_Utils {
    * @param $params
    * @param $cardID
    * @param $contactID
-   * @throws \Mpdf\MpdfException
    */
   public static function attachPdf(&$params, $cardID, $contactID) {
     if ($cardID && $contactID) {
-      $cardParams['id'] = $cardID;
       // retrieve html using card id
+      $cardParams['id'] = $cardID;
       CRM_Card_BAO_CardHtml::retrieve($cardParams, $defaults);
-      // generate pdf file
-      $pdfString = CRM_Card_Utils::preview($defaults, $contactID, TRUE);
-      $pdf = base64_decode($pdfString);
-      // attach to email
-      $base = $contactID . '-membership_card.pdf';
-      $full = tempnam(sys_get_temp_dir(), $base);
-      file_put_contents($full, $pdf);
-      $params['attachments'][] = [
-        'fullPath' => $full,
-        'mime_type' => 'application/pdf',
-        'cleanName' => $base,
-      ];
-      $params['card_processed_' . $contactID] = TRUE;
+      $settings = self::getMainSettings();
+      if (!empty($settings['card_membership_required'])) {
+        $memberIds = self::getMembershipDetails($contactID, $settings['card_membership_types']);
+        if (empty($memberIds)) {
+          return;
+        }
+        if (!empty($memberIds) && empty($settings['card_per_membership_type'])) {
+          $memberIds = [reset($memberIds)];
+        }
+        foreach ($memberIds as $membership) {
+          self::generateCard($params, $defaults, $contactID, $membership['id']);
+        }
+      }
+      else {
+        self::generateCard($params, $defaults, $contactID);
+      }
     }
+  }
+
+  /**
+   * @param $params
+   * @param $defaults
+   * @param $contactID
+   * @param string $memberId
+   * @throws \Mpdf\MpdfException
+   */
+  public static function generateCard(&$params, $defaults, $contactID, $memberId = '') {
+    $pdfString = CRM_Card_Utils::preview($defaults, $contactID, TRUE, $memberId);
+    $pdf = base64_decode($pdfString);
+    // attach to email
+    $base = "{$contactID}_{$memberId}_membership_card.pdf";
+    $full = tempnam(sys_get_temp_dir(), $base);
+    file_put_contents($full, $pdf);
+    $params['attachments'][] = [
+      'fullPath' => $full,
+      'mime_type' => 'application/pdf',
+      'cleanName' => $base,
+    ];
+    $params['card_processed_' . $contactID] = TRUE;
+  }
+
+  /**
+   * Function to return global setting for card.
+   *
+   * @return array
+   */
+  public static function getMainSettings() {
+    $domainID = CRM_Core_Config::domainID();
+    $settings = Civi::settings($domainID);
+    $mainSettings = [];
+    $elementNames = ['card_membership_types', 'card_per_membership_type', 'card_in_scheduled_reminder', 'card_membership_required'];
+    foreach ($elementNames as $elementName) {
+      $mainSettings[$elementName] = $settings->get($elementName);
+    }
+
+    return $mainSettings;
+  }
+
+  /**
+   * @param $contactId
+   * @param array $membershipTypes
+   * @return mixed
+   * @throws CiviCRM_API3_Exception
+   */
+  public static function getMembershipDetails($contactId, $membershipTypes = []) {
+    $params = [
+      'options' => ['limit' => 0],
+      'return' => ["id", "membership_type_id"],
+      'contact_id' => $contactId,
+    ];
+    if (!empty($membershipTypes)) {
+      $params['membership_type_id'] = ['IN' => $membershipTypes];
+    }
+    $memberships = civicrm_api3('membership', 'get', $params);
+
+    return $memberships['values'];
   }
 
   /**
@@ -216,5 +271,32 @@ class CRM_Card_Utils {
     }
 
     return $result;
+  }
+
+  public static function render2($html_message, $contactId, $membershipID = NULL) {
+    $messageToken = CRM_Utils_Token::getTokens($html_message);
+    $returnProperties = [];
+    if (isset($messageToken['contact'])) {
+      foreach ($messageToken['contact'] as $key => $value) {
+        $returnProperties[$value] = 1;
+      }
+    }
+    // get contact information
+    $params = ['contact_id' => $contactId];
+    //getTokenDetails is much like calling the api contact.get function - but - with some minor
+    // special handlings. It precedes the existence of the api
+    [$contacts] = CRM_Utils_Token::getTokenDetails(
+      $params, $returnProperties, FALSE, FALSE, NULL, $messageToken, 'CRM_Contribution_Form_Task_PDFLetterCommon'
+    );
+
+    $tokenHtml = CRM_Utils_Token::replaceContactTokens($html_message, $contacts[$contactId], TRUE, $messageToken);
+    if ($membershipID) {
+      $membership = CRM_Utils_Token::getMembershipTokenDetails([$membershipID]);
+      $membership = $membership[$membershipID];
+      $tokenHtml = CRM_Utils_Token::replaceEntityTokens('membership', $membership, $tokenHtml, $messageToken);
+    }
+    $tokenHtml = CRM_Utils_Token::parseThroughSmarty($tokenHtml, $contacts[$contactId]);
+
+    return $tokenHtml;
   }
 }

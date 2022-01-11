@@ -13,6 +13,7 @@ class CRM_Card_Form_Setting extends CRM_Core_Form {
     // add form elements
     $attribute = ['class' => 'crm-select2', 'placeholder' => E::ts('- any -')];
     $membershipTypes = CRM_Card_Utils::membershipTypeCurrentDomain();
+    $this->add('advcheckbox', 'card_membership_required', E::ts('Membership Required for Card?'));
     $this->add('select', 'card_membership_types', 'Membership Type(s)',
       $membershipTypes, FALSE, $attribute + ['multiple' => 'multiple']);
     $this->add('advcheckbox', 'card_per_membership_type', E::ts('Separate Card per Membership Type'));

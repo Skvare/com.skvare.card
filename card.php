@@ -221,18 +221,13 @@ function card_civicrm_alterMailParams(&$params) {
   }
 }
 
-/*
- * Implementation of hook_civicrm_alterMailParams
- */
-function members_civicrm_alterMailParams(&$params, $context) {
-}
 
 function card_civicrm_buildForm($fname, &$form) {
   if (in_array($fname, ['CRM_Admin_Form_ScheduleReminders'])) {
     $form->add('checkbox', 'is_membership_card_enabled', E::ts('Should Membership Card attached to email?'));
     $attribute = ['class' => 'crm-select2', 'placeholder' => E::ts('- any -')];
     $cardList = CRM_Card_Utils::getCardList();
-    $form->add('select', 'card_id', 'Card List', $cardList, FALSE, $attribute);
+    $form->add('select', 'card_id', E::ts('Card List'), $cardList, FALSE, $attribute);
     if ($form->_action & CRM_Core_Action::UPDATE && !empty($form->_id)) {
       $domainID = CRM_Core_Config::domainID();
       $settings = Civi::settings($domainID);
