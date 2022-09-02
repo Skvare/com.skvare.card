@@ -58,6 +58,7 @@ class CRM_Card_Utils {
       }
       else {
         $mpdf->Output('card.pdf', \Mpdf\Output\Destination::DOWNLOAD);
+        CRM_Utils_System::civiExit();
       }
     }
     catch (\MpdfException $exception) {

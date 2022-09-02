@@ -9,7 +9,7 @@
   <item>
     <path>civicrm/admin/card/list</path>
     <page_callback>CRM_Card_Page_List</page_callback>
-    <title>List Card</title>
+    <title>Card List</title>
     <access_arguments>administer CiviCRM</access_arguments>
   </item>
   <item>
@@ -21,13 +21,13 @@
   <item>
     <path>civicrm/admin/setting/card</path>
     <page_callback>CRM_Card_Form_Setting</page_callback>
-    <title>Cards Setting</title>
+    <title>Card Setting</title>
     <access_arguments>administer CiviCRM</access_arguments>
   </item>
   <item>
     <path>civicrm/admin/contribute/card</path>
     <page_callback>CRM_Card_Form_ContributionPage_Setting</page_callback>
-    <title>Settingpage</title>
-    <access_arguments>access CiviCRM</access_arguments>
+    <title>Card Membership Setting</title>
+    <access_arguments>administer CiviCRM</access_arguments>
   </item>
 </menu>

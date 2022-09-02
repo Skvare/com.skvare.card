@@ -161,7 +161,7 @@ function card_civicrm_themes(&$themes) {
  */
 function card_civicrm_navigationMenu(&$menu) {
   _card_civix_insert_navigation_menu($menu, 'Administer/System Settings', [
-    'label' => E::ts('Cards Setting'),
+    'label' => E::ts('Card Setting'),
     'name' => 'card_lists',
     'url' => CRM_Utils_System::url('civicrm/admin/setting/card', 'reset=1', TRUE),
     'permission' => 'administer CiviCRM',
