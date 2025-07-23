@@ -49,3 +49,39 @@ cv en card
 ####Card Setting link : `civicrm/admin/setting/card`
 
 ####Card Listing link : `civicrm/admin/card/list`
+
+
+## Support and Contributing
+
+- **Issues:** Report bugs and feature requests on [GitHub Issues](https://github.com/Skvare/com.skvare.card/issues)
+
+## Credits
+
+Developed by [Skvare, LLC](https://skvare.com/contact) for the CiviCRM community.
+
+## About Skvare
+
+Skvare LLC specializes in CiviCRM development, Drupal integration, and providing technology solutions for nonprofit organizations, professional societies, membership-driven associations, and small businesses. We are committed to developing open source software that empowers our clients and the wider CiviCRM community.
+
+**Contact Information**:
+- Website: [https://skvare.com](https://skvare.com)
+- Email: info@skvare.com
+- GitHub: [https://github.com/Skvare](https://github.com/Skvare)
+
+## Support
+
+[Contact us](https://skvare.com/contact) for support or to learn more.
+
+---
+
+## Related Extensions
+
+You might also be interested in other Skvare CiviCRM extensions:
+
+- **Database Custom Field Check**: Prevents adding custom fields when table limits are reached
+- **Image Resize**: Automatically resizes contact images for consistent display
+- **Registration Button Label**: Customize button labels on event registration pages
+- **Unlink User Account**: Safely unlink user accounts from contacts without deleting data
+
+For a complete list of our open source contributions, visit our [GitHub organization page](https://github.com/Skvare).
+
